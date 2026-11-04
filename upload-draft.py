@@ -24,7 +24,11 @@ try:
     version=bundle['versionCode']
     check(requests.put(base+'/tracks/internal',headers=headers,json={'track':'internal','releases':[{'name':'Aashray 1.0.0','versionCodes':[str(version)],'status':'draft','releaseNotes':[{'language':'en-IN','text':'First Aashray internal draft for device validation.'}]}]},timeout=60))
     check(requests.post(base+':validate',headers=headers,timeout=60))
-    check(requests.post(base+':commit',headers=headers,params={'changesNotSentForReview':'true'},timeout=60))
+    committed = requests.post(base+':commit', headers=headers, params={'changesNotSentForReview':'true'}, timeout=60)
+    if committed.status_code == 400 and 'must not be set' in committed.text:
+        # Only an internal DRAFT is changed; never silently submit listing edits.
+        committed = requests.post(base+':commit', headers=headers, timeout=60)
+    check(committed)
     print('Uploaded com.aashray.faith version',version,'to Internal Testing with status draft; not production.')
 except Exception:
     requests.delete(base,headers=headers,timeout=60)
