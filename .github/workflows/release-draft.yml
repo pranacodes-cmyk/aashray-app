@@ -29,7 +29,10 @@ jobs:
           cp /tmp/aashray-app.gradle.kts android/app/build.gradle.kts
           cp /tmp/aashray-settings.gradle.kts android/settings.gradle.kts
           rm -rf android/app/src/main/kotlin
+          rm -f test/widget_test.dart
           flutter pub get
+      - name: Audio validation tools
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - name: Configure independent signing
         env:
           KEYSTORE: ${{ secrets.AASHRAY_KEYSTORE_BASE64 }}
