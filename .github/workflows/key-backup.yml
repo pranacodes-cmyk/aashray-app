@@ -1,0 +1,24 @@
+name: Aashray key backup
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Encrypt keystore for owner backup
+        env:
+          KEYSTORE: ${{ secrets.AASHRAY_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$KEYSTORE" > k.b64
+          openssl cms -encrypt -binary -aes256 -in k.b64 -outform DER -out key.enc recipient.pem
+          rm -f k.b64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: key-backup
+          path: key.enc
+          retention-days: 1
