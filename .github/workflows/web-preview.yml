@@ -16,6 +16,8 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Audio validation tools
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - name: Verify Flutter and build matching preview
         working-directory: yeshu_app
         run: |
