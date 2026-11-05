@@ -1,0 +1,30 @@
+name: Aashray web preview
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: tar -xzf aashray-source.tar.gz
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Verify Flutter and build matching preview
+        working-directory: yeshu_app
+        run: |
+          flutter pub get
+          dart format lib test
+          flutter analyze --no-fatal-infos --no-fatal-warnings
+          flutter test
+          flutter build web --release --base-href /aashray/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aashray-web-preview
+          path: yeshu_app/build/web
