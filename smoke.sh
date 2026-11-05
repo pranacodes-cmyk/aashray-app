@@ -16,11 +16,11 @@ for mode in fresh cold cleared; do
   for attempt in $(seq 1 30); do
     adb shell uiautomator dump /sdcard/window.xml >/dev/null 2>&1 || true
     adb pull /sdcard/window.xml smoke/$mode.xml >/dev/null 2>&1 || true
-    if grep -q 'Welcome to Aashray' smoke/$mode.xml 2>/dev/null; then break; fi
+    if grep -q 'Start ₹2 trial' smoke/$mode.xml 2>/dev/null; then break; fi
     if grep -q 'Something went wrong while opening' smoke/$mode.xml 2>/dev/null; then fail "$mode" "startup error screen"; fi
     sleep 2
   done
-  grep -q 'Welcome to Aashray' smoke/$mode.xml || fail "$mode" "paywall not shown"
+  grep -q 'Start ₹2 trial' smoke/$mode.xml || fail "$mode" "paywall not shown"
   if grep -q 'Preview app' smoke/$mode.xml; then fail "$mode" "test access unexpectedly enabled"; fi
   adb shell screencap -p /sdcard/start.png
   adb pull /sdcard/start.png smoke/$mode.png
