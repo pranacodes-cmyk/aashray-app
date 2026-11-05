@@ -28,7 +28,7 @@ try:
     if version in existing_codes:
         raise RuntimeError(f'versionCode {version} already exists on the app; bump the version in pubspec.yaml.')
     def track(status):
-        return requests.put(base+'/tracks/internal',headers=headers,json={'track':'internal','releases':[{'name':'Aashray 1.0.3','versionCodes':[str(version)],'status':status,'releaseNotes':[{'language':'en-IN','text':'New paywall showcase, expanded 60-design status gallery, cleaner personalised statuses, improved Ringtones section and Hinglish audio titles.'}]}]},timeout=60)
+        return requests.put(base+'/tracks/internal',headers=headers,json={'track':'internal','releases':[{'name':'Aashray 1.0.6','versionCodes':[str(version)],'status':status,'releaseNotes':[{'language':'en-IN','text':'Cleaner paywall with real UPI app logos and sound-on video, server-controlled Skip, redesigned Settings.'}]}]},timeout=60)
     status='completed'
     r=track(status)
     if r.status_code==400 and 'draft app' in r.text.lower():
